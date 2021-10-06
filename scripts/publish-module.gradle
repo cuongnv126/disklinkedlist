@@ -1,0 +1,78 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier.set('javadoc')
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+group = PUBLISH_GROUP_ID
+version = PUBLISH_VERSION
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+                if (project.plugins.findPlugin("com.android.library")) {
+                    from components.release
+                } else {
+                    from components.java
+                }
+
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = PUBLISH_ARTIFACT_NAME
+                    description = PUBLISH_ARTIFACT_DESC
+                    url = "https://github.com/cuongnv126/disklinkedlist"
+                    licenses {
+                        license {
+                            name = "Apache License 2.0"
+                            url = "https://github.com/cuongnv126/disklinkedlist/LICENSE"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "cuongnv"
+                            name = "Cuong V. Nguyen"
+                            email = "cuongnv126@gmail.com"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:github.com/cuongnv126/disklinkedlist.git"
+                        developerConnection = "scm:git:ssh://github.com/cuongnv126/disklinkedlist.git"
+                        url = "https://github.com/cuongnv126/disklinkedlist/tree/main"
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            rootProject.ext["signing.keyId"],
+            rootProject.ext["signing.key"],
+            rootProject.ext["signing.password"],
+    )
+    sign publishing.publications
+}

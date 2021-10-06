@@ -1,0 +1,8 @@
+ext {
+    PUBLISH_GROUP_ID = 'org.cuongnv.disklinkedlist'
+    PUBLISH_VERSION = '0.5.0'
+    PUBLISH_ARTIFACT_ID = 'disklinkedlist'
+    PUBLISH_ARTIFACT_NAME = 'DiskLinkedList'
+    PUBLISH_ARTIFACT_DESC = 'Keep data as a linked list on disk. A alternative way to reduce redundant operation for DiskLruCache'
+    GITHUB_PATH = 'github.com/cuongnv126/disklinkedlist'
+}
