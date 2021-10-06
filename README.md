@@ -1,11 +1,14 @@
 # DiskLinkedList
+
 Keep data as a linked list on disk. An alternative way to reduce redundant operation for `DiskLruCache`
 
 ## Use-case
+
 Android have build-in [DiskLruCache.java][1], but it has too many redundant operations on runtime,
 `DiskLinkedList` using [memory-mapped file mechanism][2] to keep data on disk as a linked list.
 
 ## Advantage
+
 - Compatible with all systems running Java (Android, JVM, Kotlin/JVM).
 - Get existed / remove (move / free): O(1).
 - New put / get (allocation): O(n) on worst fragment or O(1) on defragmented.
@@ -14,13 +17,17 @@ Android have build-in [DiskLruCache.java][1], but it has too many redundant oper
 - Easy to use.
 
 ## File data structure
+
 ```text
 1 byte (B) to make use or not | 4B prev | 4B next | 4B length | extra byte array
 ```
+
 Each entry, `DiskLinkedList` storage as a node and keep as structure above.
 
 ## Usage
+
 ### Create new disk linked list data
+
 ```kotlin
 val diskLinkedList = DiskLinkedList.open(
     file = File("data.dm"),       // file on disk.
@@ -32,12 +39,15 @@ val diskLinkedList = DiskLinkedList.open(
 diskLinkedList.addFirst("Hello, World!".toData())
 diskLinkedList.log()              // 0=Hello, World!
 ```
+
 #### Data on disk
+
 ![img_2.png](preview/sample1.png)
 
 ---
 
 ### More and more
+
 ```kotlin
 // Add "Second Node" to first.
 diskLinkedList.addFirst("Second Node".toData())
@@ -63,7 +73,9 @@ diskLinkedList.log()
 ---
 
 ### Sync and de-fragment
-- `DiskLinkedList` <span style="color: red; font-weight: bold;">NOT</span> auto-sync to file, it only sync to file after `synchronize` executed.
+
+- `DiskLinkedList` <span style="color: red; font-weight: bold;">NOT</span> auto-sync to file, it only sync to file
+  after `synchronize` executed.
 - Beside of that, to avoid fragment on file, `DiskLinkedList` support `defragment` function to do.
 
 ```kotlin
@@ -88,27 +100,34 @@ diskLinkedList.log()
 // Sync every change to disk.
 diskLinkedList.synchronize()
 ```
+
 ## Dependency
 
 ### Maven
+
 ```xml
+
 <dependency>
-  <groupId>org.cuongnv.disklinkedlist</groupId>
-  <artifactId>disklinkedlist</artifactId>
-  <version>0.5.0</version>
+    <groupId>org.cuongnv.disklinkedlist</groupId>
+    <artifactId>disklinkedlist</artifactId>
+    <version>0.5.0</version>
 </dependency>
 ```
 
 ### Gradle Kotlin DSL
+
 ```kotlin
 implementation("org.cuongnv.disklinkedlist:disklinkedlist:0.5.0")
 ```
+
 ### Gradle Groovy
+
 ```groovy
 implementation 'org.cuongnv.disklinkedlist:disklinkedlist:0.5.0'
 ```
 
 ## License
+
 ```
 Copyright 2021 Cuong V. Nguyen (github.com/cuongnv126).
 
@@ -126,4 +145,5 @@ limitations under the License.
 ```
 
 [1]: https://android.googlesource.com/platform/libcore/+/jb-mr2-release/luni/src/main/java/libcore/io/DiskLruCache.java
+
 [2]: https://en.wikipedia.org/wiki/Memory-mapped_file
